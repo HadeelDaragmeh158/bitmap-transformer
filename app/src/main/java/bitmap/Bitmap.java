@@ -8,7 +8,7 @@ import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
 
-public class bitmap {
+public class Bitmap {
     private int height;
     private int width;
     BufferedImage img;
@@ -21,30 +21,28 @@ public class bitmap {
         this.width = w;
     }
 
-    public void ReadMyImg(String path) {
-        File file = new File(path);
+    public void readMyImg(File path) {
         try {
-            img = ImageIO.read(file);
-            height = img.getHeight();
-            width = img.getWidth();
-            System.out.println("Height : " + height + "\n" + "Width : " + width);
+            img = ImageIO.read(path);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
+        height= img.getHeight();
+        width= img.getWidth();
+        System.out.println(height+" "+width);
     }
 
-    public void writeImage(String path) {
+    public void writeImage(File file, BufferedImage ImageWrite) {
         try {
-            ImageIO.write(img, "bmp", new File(path));
+            String path = null;
+            ImageIO.write(ImageWrite, "bmp",file);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void Invert() {
+    public BufferedImage  invert() {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 int p = img.getRGB(x, y);
@@ -61,15 +59,16 @@ public class bitmap {
                 img.setRGB(x, y, p);
             }
         }
+        return img;
     }
 
-    public void BlackandWhite() {
+    public BufferedImage  blackandWhite() {
         BufferedImage bwImage = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_BYTE_BINARY);
         bwImage.createGraphics().drawImage(img, 0, 0, null);
-
+        return img;
     }
 
-    public void DarkenorLighten() {
+    public BufferedImage  darkenorLighten() {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 Color color = new Color(img.getRGB(x, y));
@@ -77,10 +76,10 @@ public class bitmap {
                 img.setRGB(x, y, color.getAlpha());
             }
         }
-
+        return img;
     }
 
-    public void Pixilate() {
+    public BufferedImage  pixilate() {
         final int sizePixilate = 15;
         Raster rasterData = img.getData();
         WritableRaster identicalSize = rasterData.createCompatibleWritableRaster();
@@ -99,9 +98,10 @@ public class bitmap {
 
         }
         img.setData(identicalSize);
+        return img;
     }
 
-    public BufferedImage rotate(BufferedImage img)
+    public BufferedImage rotate()
     {
          width = img.getWidth();
          height = img.getHeight();
